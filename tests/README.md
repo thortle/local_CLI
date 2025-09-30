@@ -1,115 +1,94 @@
 # LM Studio Integration Testing Suite
 
-This directory contains all test scripts and documentation for validating the LM Studio integration into Gemini CLI Masters.
+Testing framework and validation for LM Studio integration into Gemini CLI Masters.
 
 ## 📁 Directory Structure
 
 ```
 tests/
-├── README.md                    # This file
-├── step1/                       # Step 1: Core Infrastructure tests
+├── README.md                    # Testing framework overview (this file)
+├── step1/                       # Core Infrastructure tests
 │   ├── test-authtype.js        # AuthType enum validation
 │   ├── test-adapter.js         # LM Studio adapter creation
 │   ├── test-registry.js        # Adapter registry integration
 │   └── test-connection.js      # Connection validation
-├── step2/                       # Step 2: Configuration System tests
+├── step2/                       # Configuration System tests
 │   ├── test-models.js          # Model definitions and validation
 │   ├── test-config.js          # Configuration integration
 │   └── test-env-vars.js        # Environment variable handling
-├── step3/                       # Step 3: CLI Integration tests
-│   ├── test-commands.js        # CLI command parsing
-│   └── test-switching.js       # Provider switching
+├── step3/                       # CLI Integration tests
+│   ├── cli-integration.test.js # CLI integration testing
+│   ├── integration-workflow.test.js # Integration workflow testing
+│   └── README.md               # Step 3 debugging guide
 ├── integration/                 # Full integration tests
-│   ├── test-full-workflow.js   # End-to-end testing
-│   └── test-with-lmstudio.js   # Real LM Studio communication
+│   └── manual-integration-test.js # Manual end-to-end validation
 └── utils/                       # Test utilities
     ├── test-runner.js          # Automated test runner
-    └── test-helpers.js         # Common test functions
+    ├── test-helpers.js         # Common test functions
+    └── test-lmstudio.js        # LM Studio specific utilities
 ```
 
 ## 🧪 Testing Phases
 
 ### Phase 1: Core Infrastructure ✅
-**Status**: Completed and Validated
+Tests fundamental adapter components and registry integration.
 
-Tests the fundamental components:
-- AuthType enum extension
-- LM Studio adapter creation
-- Registry integration
-- Basic connection validation
-
-**Run Phase 1 Tests:**
+**Run Tests:**
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
 node utils/test-runner.js --phase=1
 ```
 
-### Phase 2: Configuration System ✅
-**Status**: Completed and Validated
+### Phase 2: Configuration System ✅  
+Tests model definitions, environment variables, and configuration integration.
 
-Tests configuration integration:
-- Model definitions
-- Environment variables
-- Content generator configuration
-- Model validation functions
-
-**Run Phase 2 Tests:**
+**Run Tests:**
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
 node utils/test-runner.js --phase=2
 ```
 
-### Phase 3: CLI Integration ⏳
-**Status**: Planned
+### Phase 3: CLI Integration ✅
+Tests CLI commands, authentication flow, and bundle integration.
+*See `step3/README.md` for detailed debugging information.*
 
-Tests CLI functionality:
-- `/model lmstudio` command
-- Provider switching
-- Error handling
-- Help text integration
-
-**Run Phase 3 Tests:**
+**Run Tests:**
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
 node utils/test-runner.js --phase=3
 ```
 
-### Phase 4: Full Integration ⏳
-**Status**: Planned
+### Phase 4: Full Integration ✅
+Tests complete end-to-end workflows and production deployment.
 
-Tests complete workflow:
-- End-to-end provider switching
-- Real LM Studio communication
-- Tool calling with LM Studio
-- Performance validation
-
-**Run Integration Tests:**
+**Run Tests:**
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
-node utils/test-runner.js --integration
+node integration/manual-integration-test.js
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Test Commands
 
-### Run All Available Tests
+### Run All Tests
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
 node utils/test-runner.js --all
 ```
 
-### Run Specific Test
-```bash
-cd /Users/thortle/Desktop/ML/CLI/tests
-node step1/test-adapter.js
-```
-
-### Validate LM Studio Connection
+### Check LM Studio Connection
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
 node utils/test-helpers.js --check-lmstudio
 ```
 
-## 📋 Test Requirements
+### Run Individual Phase
+```bash
+cd /Users/thortle/Desktop/ML/CLI/tests
+node step1/test-adapter.js
+node step2/test-config.js
+```
+
+## 📋 Test Requirements & Setup
 
 ### Prerequisites
 - **Node.js**: Version 20+ (project requirement)
@@ -123,39 +102,26 @@ export LM_STUDIO_BASE_URL="http://127.0.0.1:1234"
 export LM_STUDIO_MODEL="your-preferred-model-id"
 export LM_STUDIO_API_KEY="lm-studio"
 
-# Navigate to project root
-cd /Users/thortle/Desktop/ML/CLI
-
-# Run tests
-cd tests && node utils/test-runner.js
+# Navigate to tests directory
+cd /Users/thortle/Desktop/ML/CLI/tests
 ```
 
 ## 🎯 Testing Strategy
 
-### Unit Tests
-- **Isolated Component Testing**: Each adapter, configuration, and utility function
-- **Mock Dependencies**: Test without requiring external services
-- **Error Scenarios**: Validate error handling and edge cases
+### Test Categories
+- **Unit Tests**: Isolated component testing (steps 1-2)
+- **Integration Tests**: End-to-end workflow validation (step 3 + integration)
+- **System Tests**: Real LM Studio communication and performance
 
-### Integration Tests
-- **Provider Integration**: Test adapter registration and switching
-- **Configuration Integration**: Verify config system works end-to-end
-- **CLI Integration**: Validate command parsing and execution
+### Test Principles
+- **Isolated Testing**: Each component tested independently
+- **Progressive Validation**: Build from core components to full integration
+- **Error Scenarios**: Comprehensive offline/online scenario coverage
+- **Performance Validation**: Response times and resource usage
 
-### System Tests
-- **Real LM Studio**: Test with actual LM Studio instance
-- **Model Communication**: Verify text generation and tool calling
-- **Performance**: Validate response times and memory usage
+## 📊 Test Output Format
 
-### Regression Tests
-- **Existing Functionality**: Ensure we don't break other providers
-- **Backward Compatibility**: Verify existing commands still work
-- **Error Handling**: Maintain robust error messages
-
-## 📊 Test Results Format
-
-Tests output results in consistent format:
-
+All tests use consistent output format:
 ```
 🧪 Test: [Test Name]
 ✅ PASS: [Success Description]
@@ -164,19 +130,49 @@ Tests output results in consistent format:
 📋 INFO: [Information]
 ```
 
-### Exit Codes
-- `0`: All tests passed
-- `1`: One or more tests failed
-- `2`: Test setup/configuration error
+**Exit Codes**: `0` = Pass, `1` = Fail, `2` = Setup Error
 
-## 🔧 Test Development Guidelines
+## � Common Troubleshooting
+
+### LM Studio Connection Issues
+```bash
+# Verify LM Studio is running
+curl http://127.0.0.1:1234/v1/models
+# Expected: JSON response with models
+
+# Check connection helper
+node utils/test-helpers.js --check-lmstudio
+```
+
+### Test Environment Issues
+```bash
+# Verify correct directory
+pwd
+# Expected: /Users/thortle/Desktop/ML/CLI/tests
+
+# Check Node.js version
+node --version
+# Expected: v20+ or v24+
+```
+
+### Bundle/Integration Issues
+```bash
+# Test global installation
+which gemini-masters
+# Expected: /opt/homebrew/bin/gemini-masters
+
+# Verify bundle modifications
+node integration/manual-integration-test.js
+```
+
+## � Test Development Guidelines
 
 ### Adding New Tests
-1. Create test file in appropriate phase directory
-2. Follow naming convention: `test-[component].js`
-3. Include descriptive console output
-4. Use consistent error handling
-5. Update this README with new test description
+1. **Choose appropriate phase directory** (step1, step2, step3, integration)
+2. **Follow naming convention**: `test-[component].js`
+3. **Use consistent output format** (🧪, ✅, ❌, ⚠️, 📋)
+4. **Include error handling** for all scenarios
+5. **Update documentation** when adding new test categories
 
 ### Test File Template
 ```javascript
@@ -199,116 +195,13 @@ test[ComponentName]().then(success => {
 });
 ```
 
-## 🐛 Troubleshooting
+## 📈 Test Coverage Status
 
-### Common Issues
+- **✅ Phase 1**: Core Infrastructure - Complete
+- **✅ Phase 2**: Configuration System - Complete
+- **✅ Phase 3**: CLI Integration - Complete (see `step3/README.md` for debugging)
+- **✅ Phase 4**: Full Integration - Complete
 
-**"LM Studio connection failed"**
-- Ensure LM Studio is running
-- Check port 1234 is available
-- Verify at least one model is loaded
-
-**"Module not found"**
-- Run from correct directory: `/Users/thortle/Desktop/ML/CLI/tests`
-- Check file paths in test scripts
-- Verify all dependencies are installed
-
-**"AuthType undefined"**
-- Ensure Step 1 implementation is complete
-- Check AuthType enum includes USE_LM_STUDIO
-- Verify imports are correct
-
-### Debug Mode
-Run tests with debug output:
-```bash
-DEBUG=1 node utils/test-runner.js --phase=1
-```
-
-## 📈 Test Coverage Goals
-
-- **Unit Tests**: 100% of new LM Studio components
-- **Integration Tests**: All provider switching scenarios
-- **Error Handling**: All error paths and edge cases
-- **Performance**: Response time and memory benchmarks
-
-## 🔄 Continuous Testing
-
-### Manual Testing Workflow
-1. Make code changes
-2. Run relevant phase tests
-3. Fix any failures
-4. Run integration tests
-5. Validate with real LM Studio
-
-### Automated Testing (Future)
-- Git pre-commit hooks
-- CI/CD integration
-- Performance regression detection
-- Compatibility testing across Node.js versions
-
----
-
-## 📝 Test Log
-
-### Step 1 Testing Results ✅
-**Date**: September 30, 2025  
-**Status**: All tests passing  
-**Environment**: LM Studio running with 3 models loaded  
-**Details**: 
-- ✅ **AuthType enum**: USE_LM_STUDIO added as "lm-studio"
-- ✅ **Adapter creation**: LMStudioContentGenerator working with 30s timeout
-- ✅ **Registry integration**: 'lm-studio' auth type recognized and routed correctly
-- ✅ **Connection validation**: Successfully connects to running LM Studio at localhost:1234
-- ✅ **Model discovery**: Detected 3 models:
-  - mistralai/devstral-small-2507 (coding optimized)
-  - text-embedding-nomic-embed-text-v1.5 (embeddings)
-  - qwen/qwen3-coder-30b (large coding model)
-- ✅ **Error handling**: Robust connection failure handling for offline scenarios
-- ✅ **Test duration**: All tests completed in 85ms
-
-**Test Commands Verified:**
-```bash
-cd /Users/thortle/Desktop/ML/CLI/tests
-node utils/test-runner.js --phase=1        # ✅ All 4 tests passed
-node utils/test-helpers.js                 # ✅ Environment ready
-node utils/test-helpers.js --check-lmstudio # ✅ LM Studio connected
-node utils/test-runner.js --all            # ✅ Phase 1 complete
-```
-
-### Step 2 Testing Results ✅
-**Date**: September 30, 2025  
-**Status**: All tests passing  
-**Environment**: LM Studio running with 3 models loaded  
-**Details**: 
-- ✅ **Model definitions**: 7 LM Studio models defined with proper structure and validation
-- ✅ **Model categories**: 3 coding, 3 general, 1 embedding model defined
-- ✅ **Current environment**: All user's loaded models (mistralai/devstral-small-2507, text-embedding-nomic-embed-text-v1.5, qwen/qwen3-coder-30b) are included
-- ✅ **Default model**: mistralai/devstral-small-2507 set as default
-- ✅ **Model utilities**: getDefaultLMStudioModel(), getLMStudioModelInfo(), validateLMStudioModel() all working
-- ✅ **Configuration integration**: createContentGeneratorConfig() properly handles LM Studio auth type
-- ✅ **Environment variables**: LM_STUDIO_API_KEY, LM_STUDIO_BASE_URL, LM_STUDIO_MODEL fully supported
-- ✅ **Variable precedence**: Environment > Config Object > Defaults working correctly
-- ✅ **Model validation**: Invalid models properly fallback to default
-- ✅ **Config structure**: All required fields (model, authType, apiKey, baseUrl) present
-- ✅ **Test duration**: All tests completed in 3ms
-
-**Test Commands Verified:**
-```bash
-cd /Users/thortle/Desktop/ML/CLI/tests
-node utils/test-runner.js --phase=2        # ✅ All 3 tests passed
-node step2/test-models.js                  # ✅ Model definitions working
-node step2/test-config.js                  # ✅ Configuration integration working
-node step2/test-env-vars.js                # ✅ Environment variables working
-node utils/test-runner.js --all            # ✅ Phase 1 & 2 complete
-```
-
-**Configuration Capabilities Added:**
-- ✅ **Model catalog**: Comprehensive MLX-optimized model definitions
-- ✅ **Environment variables**: Full environment variable support with fallbacks
-- ✅ **Model validation**: Automatic validation and default fallback for invalid models
-- ✅ **Config precedence**: Proper precedence handling for multiple configuration sources
-- ✅ **End-to-end**: Complete integration from config creation to adapter instantiation
-
-### Next Phase
-**Target**: Step 3 - CLI Integration
-**Focus**: `/model lmstudio` command, provider switching, CLI integration
+For detailed implementation status and next development phases, see:
+- `/CLI/LM_STUDIO_INTEGRATION_PLAN.md` - Complete project documentation
+- `/CLI/tests/step3/README.md` - Step 3 specific debugging guide
