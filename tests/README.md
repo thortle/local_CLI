@@ -20,9 +20,16 @@ tests/
 │   ├── cli-integration.test.js # CLI integration testing
 │   ├── integration-workflow.test.js # Integration workflow testing
 │   └── README.md               # Step 3 debugging guide
+├── step4/                       # Tool Calling Verification & Debugging
+│   ├── README.md               # Phase 4 testing documentation
+│   ├── test-api-tool-calling.js       # Direct API tool calling tests
+│   ├── test-cli-tool-integration.js   # CLI tool calling integration
+│   ├── test-model-optimization.js     # Model-specific optimizations
+│   └── test-timeout-handling.js       # Timeout and error handling
 ├── integration/                 # Full integration tests
 │   └── manual-integration-test.js # Manual end-to-end validation
 └── utils/                       # Test utilities
+    ├── run-tool-tests.js       # Tool calling test suite runner
     ├── test-runner.js          # Automated test runner
     ├── test-helpers.js         # Common test functions
     └── test-lmstudio.js        # LM Studio specific utilities
@@ -58,7 +65,17 @@ cd /Users/thortle/Desktop/ML/CLI/tests
 node utils/test-runner.js --phase=3
 ```
 
-### Phase 4: Full Integration ✅
+### Phase 4: Tool Calling Verification & Debugging 🔄
+Tests tool calling functionality, timeout handling, and model optimization.
+*See `step4/README.md` for detailed testing and debugging information.*
+
+**Run Tests:**
+```bash
+cd /Users/thortle/Desktop/ML/CLI/tests
+node utils/run-tool-tests.js --all
+```
+
+### Full Integration ✅
 Tests complete end-to-end workflows and production deployment.
 
 **Run Tests:**
@@ -86,6 +103,13 @@ node utils/test-helpers.js --check-lmstudio
 cd /Users/thortle/Desktop/ML/CLI/tests
 node step1/test-adapter.js
 node step2/test-config.js
+node step4/test-api-tool-calling.js
+```
+
+### Run Step 4 Tool Calling Tests
+```bash
+cd /Users/thortle/Desktop/ML/CLI/tests
+node utils/run-tool-tests.js --all
 ```
 
 ## 📋 Test Requirements & Setup
@@ -200,7 +224,7 @@ test[ComponentName]().then(success => {
 - **✅ Phase 1**: Core Infrastructure - Complete
 - **✅ Phase 2**: Configuration System - Complete
 - **✅ Phase 3**: CLI Integration - Complete (see `step3/README.md` for debugging)
-- **✅ Phase 4**: Full Integration - Complete
+- ** Phase 4**: Full Integration
 
 For detailed implementation status and next development phases, see:
 - `/CLI/LM_STUDIO_INTEGRATION_PLAN.md` - Complete project documentation

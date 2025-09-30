@@ -58,9 +58,16 @@ This is a local development copy of the **Gemini CLI Masters**, which is a fork 
 │   │   ├── cli-integration.test.js      # CLI integration testing
 │   │   ├── integration-workflow.test.js # Integration workflow testing
 │   │   └── README.md          # Step 3 documentation
+│   ├── step4/                  # Tool Calling Verification & Debugging
+│   │   ├── README.md          # Phase 4 testing documentation
+│   │   ├── test-api-tool-calling.js    # Direct API tool calling tests
+│   │   ├── test-cli-tool-integration.js # CLI tool calling integration
+│   │   ├── test-model-optimization.js  # Model-specific optimizations
+│   │   └── test-timeout-handling.js    # Timeout and error handling
 │   ├── integration/            # Full integration tests
 │   │   └── manual-integration-test.js # End-to-end validation
 │   └── utils/                  # Test utilities
+│       ├── run-tool-tests.js  # Tool calling test suite runner
 │       ├── test-runner.js     # Automated test runner
 │       ├── test-helpers.js    # Common test functions
 │       └── test-lmstudio.js   # LM Studio specific utilities

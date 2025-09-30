@@ -81,41 +81,136 @@ enum AuthType {
 - ✅ Integrated with existing help system and error handling
 - ✅ Deployed modified bundle globally
 
-**Phase 4: Enhanced Features** ✅ **COMPLETE**
-- ✅ Real-time model discovery from LM Studio API
-- ✅ Health check integration and connection validation
-- ✅ MLX-specific optimizations and defaults
-- ✅ Comprehensive error handling and user feedback
+**Phase 4: Tool Calling Verification & Debugging** 🔄 **IN PROGRESS**
+- 🔄 Comprehensive tool calling validation with `mistralai/devstral-small-2507`
+- 🔄 API-level tool calling functionality testing
+- 🔄 CLI integration tool calling validation
+- 🔄 Stalling and timeout issue investigation
+- 🔄 Tool calling performance and reliability optimization
+- 🔄 Model-specific tool calling configuration validation
 
-**Phase 5: Testing & Validation** ✅ **COMPLETE**
-- ✅ All unit tests passing (Core Infrastructure)
-- ✅ All integration tests passing (Configuration System)
-- ✅ Manual end-to-end testing validated
-- ✅ Authentication flow bug identified and fixed
-- ✅ Production deployment validated
+**Phase 5: Enhanced Features** 
+-  Real-time model discovery from LM Studio API
+-  Health check integration and connection validation
+-  MLX-specific optimizations and defaults
+-  Comprehensive error handling and user feedback
 
-### 🏆 Implementation Results
+**Phase 6: Testing & Validation** 
+-  All unit tests passing (Core Infrastructure)
+-  All integration tests passing (Configuration System)
+-  Manual end-to-end testing validated
+-  Authentication flow bug identified and fixed
+-  Production deployment validated
 
-**Technical Achievements:**
-- ✅ **Complete Integration**: LM Studio fully integrated into 266k+ line bundle
-- ✅ **Seamless Authentication**: Both direct auth and model switching work perfectly
-- ✅ **Production Ready**: Global installation working with modified bundle
-- ✅ **Robust Error Handling**: Comprehensive offline/online scenario support
-- ✅ **MLX Optimization**: Apple Silicon specific configurations implemented
 
-**Performance Results:**
-- ✅ **Fast Implementation**: Completed in 1 day vs. planned 5 days
-- ✅ **Zero Breaking Changes**: All existing functionality preserved
-- ✅ **Minimal Overhead**: No performance impact on other providers
-- ✅ **Local Performance**: Excellent response times with MLX models
+## � **PHASE 4: TOOL CALLING VERIFICATION & DEBUGGING**
 
-**User Experience Results:**
-- ✅ **Intuitive Commands**: `/model lmstudio` works seamlessly
-- ✅ **Clear Authentication**: "LM Studio" option in auth menu works perfectly
-- ✅ **Auto-Detection**: Automatically discovers loaded models
-- ✅ **Error Clarity**: Clear, actionable error messages for all scenarios
+**Status**: **IN PROGRESS** - September 30, 2025  
+**Focus**: Validate and optimize tool calling functionality with LM Studio integration
 
-## 🚀 **NEXT DEVELOPMENT PHASE OPTIONS**
+### 🎯 Phase 4 Objectives
+
+**Primary Goal**: Ensure LM Studio integration properly handles tool calling with models that support function calling, specifically addressing stalling issues observed with `mistralai/devstral-small-2507`.
+
+**Key Issues to Resolve:**
+1. **Tool Calling Stalls**: Model appears to hang when given tool-enabled prompts
+2. **Function Calling Format**: Verify proper OpenAI-compatible tool calling format support
+3. **Timeout Handling**: Implement proper timeout and error handling for stalled requests
+4. **Model Configuration**: Optimize parameters for tool calling performance
+5. **CLI Integration**: Ensure seamless tool calling through Gemini CLI interface
+
+### 🧪 Phase 4 Testing Strategy
+
+**Test Categories:**
+1. **API-Level Tool Calling** - Direct LM Studio API tool calling validation
+2. **CLI Integration Testing** - Tool calling through Gemini CLI interface  
+3. **Model-Specific Testing** - `mistralai/devstral-small-2507` optimization
+4. **Performance Testing** - Response times and timeout handling
+5. **Error Scenario Testing** - Offline, model-unavailable, and timeout scenarios
+
+**Test Structure:**
+```
+tests/
+├── README.md                    # Testing framework overview
+├── step1/                       # Core Infrastructure tests
+│   ├── test-authtype.js        # AuthType enum validation
+│   ├── test-adapter.js         # LM Studio adapter creation
+│   ├── test-registry.js        # Adapter registry integration
+│   └── test-connection.js      # Connection validation
+├── step2/                       # Configuration System tests
+│   ├── test-models.js          # Model definitions and validation
+│   ├── test-config.js          # Configuration integration
+│   └── test-env-vars.js        # Environment variable handling
+├── step3/                       # CLI Integration tests
+│   ├── cli-integration.test.js # CLI integration testing
+│   ├── integration-workflow.test.js # Integration workflow testing
+│   └── README.md               # Step 3 debugging guide
+├── step4/                       # Tool Calling Verification & Debugging
+│   ├── README.md               # Phase 4 testing documentation
+│   ├── test-api-tool-calling.js       # Direct API tool calling tests
+│   ├── test-cli-tool-integration.js   # CLI tool calling integration
+│   ├── test-model-optimization.js     # Model-specific optimizations
+│   └── test-timeout-handling.js       # Timeout and error handling
+├── integration/                 # Full integration tests
+│   └── manual-integration-test.js # Manual end-to-end validation
+└── utils/                       # Test utilities
+    ├── run-tool-tests.js       # Tool calling test suite runner
+    ├── test-runner.js          # Automated test runner
+    ├── test-helpers.js         # Common test functions
+    └── test-lmstudio.js        # LM Studio specific utilities
+```
+
+### 🔍 Phase 4 Debugging Focus Areas
+
+**1. Tool Calling Format Validation**
+- Verify OpenAI-compatible tool calling format adherence
+- Test function schema validation and parameter parsing
+- Validate model understanding of tool calling instructions
+
+**2. Model Performance Optimization**
+- Analyze optimal parameters for `mistralai/devstral-small-2507`
+- Test different temperature, max_tokens, and timeout settings
+- Evaluate tool_choice behavior (auto vs forced)
+
+**3. Timeout and Error Handling**
+- Implement robust timeout mechanisms for stalled requests
+- Add graceful degradation when tool calling fails
+- Provide clear user feedback for tool calling issues
+
+**4. CLI Integration Validation**
+- Test tool calling through `/model lmstudio` command
+- Validate tool calling in various CLI scenarios
+- Ensure proper error propagation from API to CLI
+
+### 📊 Phase 4 Success Criteria
+
+**Functional Requirements:**
+-  Tool calling works reliably with `mistralai/devstral-small-2507`
+-  No stalling on tool-enabled prompts
+-  Proper timeout handling (< 30 seconds response time)
+-  CLI tool calling integration functions correctly
+-  Clear error messages for tool calling failures
+
+**Performance Requirements:**
+-  Tool calling responses within 15 seconds for simple tools
+-  Complex tool calling scenarios complete within 30 seconds
+-  No memory leaks or resource issues during extended tool calling
+
+**Quality Requirements:**
+-  Comprehensive test coverage for tool calling scenarios
+-  Documentation for troubleshooting tool calling issues
+-  Validation with multiple tool-enabled models
+
+### 🛠️ Phase 4 Implementation Plan
+
+**Step 4.1**: Create comprehensive tool calling test suite
+**Step 4.2**: Diagnose current stalling issues with direct API testing
+**Step 4.3**: Implement timeout and error handling improvements
+**Step 4.4**: Optimize model parameters for tool calling performance
+**Step 4.5**: Validate CLI integration tool calling functionality
+**Step 4.6**: Document troubleshooting guide for tool calling issues
+
+## �🚀 **NEXT DEVELOPMENT PHASE OPTIONS**
 
 With LM Studio integration complete, here are the next development opportunities for future iterations:
 
@@ -810,9 +905,6 @@ export LM_STUDIO_MODEL="mlx-community/Llama-3.2-3B-Instruct-4bit"
 ### Phase 2 Features (Post-MVP)
 1. **Model Management Integration** - Direct model download from CLI
 2. **Performance Monitoring** - Real-time inference metrics
-3. **Advanced MLX Optimizations** - Model-specific tuning
-4. **Multi-Model Support** - Load multiple models simultaneously
-5. **Custom Model Support** - User-trained MLX models
 
 ### Integration Opportunities
 1. **Hugging Face Hub** - Direct model discovery and download
@@ -895,6 +987,5 @@ The implementation provides a solid foundation for future enhancements with mult
 ---
 
 **Final Status**: ✅ **COMPLETE AND PRODUCTION READY**  
-**Next Steps**: Ready to proceed with advanced optimization phases when desired  
-**Timeline**: **1 day** (September 30, 2025)  
+**Next Steps**: Ready to proceed with advanced optimization phases when desired   
 **Quality**: **Exceeds all original requirements and expectations**
