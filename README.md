@@ -32,12 +32,15 @@ This is a local development copy of the **Gemini CLI Masters**, which is a fork 
 │   │       ├── services/        # File & Git services
 │   │       ├── telemetry/       # OpenTelemetry integration
 │   │       └── utils/           # Utility functions
+│   ├── LICENSE
 │   ├── package.json
+│   ├── README.md
 │   └── node_modules/
 └── gemini-cli-masters/          # Main CLI package (v0.1.42)
     ├── bundle/                  # Bundled executable & configs
     │   ├── gemini.js           # Main executable (266k+ lines bundled)
     │   └── sandbox-macos-*.sb  # macOS sandbox security configs
+    ├── LICENSE
     ├── package.json
     └── README.md
 ```
