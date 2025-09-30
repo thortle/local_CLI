@@ -11,9 +11,8 @@ console.log('🧪 Testing LM Studio Timeout and Error Handling...\n');
 
 async function testTimeoutHandling() {
     try {
-        console.log('1️⃣ Setting up timeout and error handling tests...');
+        console.log('1️⃣ Setting up timeout testing environment...');
         
-        const fetch = await import('node-fetch').then(m => m.default);
         const baseUrl = process.env.LM_STUDIO_BASE_URL || 'http://127.0.0.1:1234';
         
         // Get available models

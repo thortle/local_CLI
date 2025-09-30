@@ -13,7 +13,6 @@ async function testModelOptimization() {
     try {
         console.log('1️⃣ Setting up optimization test environment...');
         
-        const fetch = await import('node-fetch').then(m => m.default);
         const baseUrl = process.env.LM_STUDIO_BASE_URL || 'http://127.0.0.1:1234';
         
         // Verify LM Studio connection and target model

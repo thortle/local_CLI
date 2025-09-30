@@ -9,14 +9,15 @@
  * Focus: mistralai/devstral-small-2507 tool calling validation
  */
 
-console.log('🧪 Testing LM Studio Tool Calling Functionality...\n');
+import { fetchWithProgressiveTimeout, handleToolCallingError, analyzePerformance } from '../utils/enhanced-timeout.js';
+
+console.log('🧪 Testing LM Studio Tool Calling Functionality..\n');
 
 async function testToolCalling() {
     try {
         console.log('1️⃣ Testing LM Studio connection and model availability...');
         
         // Check if LM Studio is running and has models loaded
-        const fetch = await import('node-fetch').then(m => m.default);
         const baseUrl = process.env.LM_STUDIO_BASE_URL || 'http://127.0.0.1:1234';
         
         let modelsResponse;
@@ -85,41 +86,44 @@ async function testToolCalling() {
                 }
             ],
             "tools": [testTool],
-            "tool_choice": "auto",
-            "max_tokens": 150,
-            "temperature": 0.1,
+            "tool_choice": "required",  // Optimized: use required vs auto
+            "max_tokens": 100,          // Optimized: reduced from 150
+            "temperature": 0.7,          // Optimized: increased from 0.1
             "stream": false
         };
         
         console.log('📤 Sending tool calling request...');
         console.log(`📋 Request payload: ${JSON.stringify(testPayload, null, 2)}`);
         
-        const startTime = Date.now();
-        let toolResponse;
+        // Use enhanced timeout with progressive warnings
+        const warningCallback = (message, elapsed) => {
+            console.log(`${message}`);
+        };
         
-        try {
-            toolResponse = await fetch(`${baseUrl}/v1/chat/completions`, {
+        // Adaptive timeout: longer for first call (warm-up), shorter for subsequent
+        const firstCallTimeout = 25000; // 25 seconds for first call (warm-up)
+        
+        const result = await fetchWithProgressiveTimeout(
+            `${baseUrl}/v1/chat/completions`,
+            {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer lm-studio'
                 },
-                body: JSON.stringify(testPayload),
-                signal: AbortSignal.timeout(30000) // 30 second timeout
-            });
-        } catch (error) {
-            const duration = Date.now() - startTime;
-            console.log(`❌ Tool calling request failed after ${duration}ms:`, error.message);
-            
-            if (error.name === 'AbortError') {
-                console.log('🚨 TIMEOUT: Model appears to be stalling on tool calling');
-                console.log('📋 This suggests the model or integration has issues with tool calling');
-            }
+                body: JSON.stringify(testPayload)
+            },
+            firstCallTimeout, // Adaptive timeout for warm-up
+            warningCallback
+        );
+        
+        if (!result.success) {
+            handleToolCallingError(result.error, currentModel.id, testPayload);
             return false;
         }
         
-        const responseTime = Date.now() - startTime;
-        console.log(`⏱️  Response time: ${responseTime}ms`);
+        const toolResponse = result.response;
+        analyzePerformance(result.duration, true, currentModel.id);
         
         if (!toolResponse.ok) {
             console.log('❌ Tool calling API error:', toolResponse.status, toolResponse.statusText);
@@ -205,35 +209,35 @@ async function testToolCalling() {
                 }
             ],
             "tools": [complexTool],
-            "tool_choice": "auto",
-            "max_tokens": 150,
-            "temperature": 0.1,
+            "tool_choice": "required",  // Optimized parameter
+            "max_tokens": 100,          // Optimized parameter
+            "temperature": 0.7,          // Optimized parameter
             "stream": false
         };
         
         console.log('📤 Sending complex tool calling request...');
         
-        const complexStartTime = Date.now();
-        let complexResponse;
-        
-        try {
-            complexResponse = await fetch(`${baseUrl}/v1/chat/completions`, {
+        const complexResult = await fetchWithProgressiveTimeout(
+            `${baseUrl}/v1/chat/completions`,
+            {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer lm-studio'
                 },
-                body: JSON.stringify(complexTestPayload),
-                signal: AbortSignal.timeout(30000)
-            });
-        } catch (error) {
-            const duration = Date.now() - complexStartTime;
-            console.log(`❌ Complex tool calling failed after ${duration}ms:`, error.message);
+                body: JSON.stringify(complexTestPayload)
+            },
+            10000, // Shorter timeout for second call (model is warmed up)
+            warningCallback
+        );
+        
+        if (!complexResult.success) {
+            handleToolCallingError(complexResult.error, currentModel.id, complexTestPayload);
             return false;
         }
         
-        const complexResponseTime = Date.now() - complexStartTime;
-        console.log(`⏱️  Complex response time: ${complexResponseTime}ms`);
+        const complexResponse = complexResult.response;
+        analyzePerformance(complexResult.duration, false, currentModel.id);
         
         if (complexResponse.ok) {
             const complexData = await complexResponse.json();
