@@ -5,7 +5,7 @@
  */
 import { GoogleGenAI, } from '@google/genai';
 import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
-import { DEFAULT_GEMINI_MODEL, getDefaultAnthropicModel, validateAnthropicModel } from '../config/models.js';
+import { DEFAULT_GEMINI_MODEL, getDefaultAnthropicModel, validateAnthropicModel, getDefaultLMStudioModel, validateLMStudioModel } from '../config/models.js';
 import { getEffectiveModel } from './modelCheck.js';
 import { createCustomContentGenerator } from '../adapters/index.js';
 function getProviderSpecificUserAgent(authType, version) {
@@ -73,6 +73,11 @@ export async function createContentGeneratorConfig(model, authType, config) {
     const azureApiKey = getValue('AZURE_API_KEY', 'azureApiKey');
     const azureEndpointUrl = getValue('AZURE_ENDPOINT_URL', 'azureEndpointUrl');
     const azureApiVersion = getValue('AZURE_API_VERSION', 'azureApiVersion');
+    
+    // LM Studio configuration
+    const lmStudioApiKey = getValue('LM_STUDIO_API_KEY', 'lmStudioApiKey');
+    const lmStudioBaseUrl = getValue('LM_STUDIO_BASE_URL', 'lmStudioBaseUrl');
+    const lmStudioModel = getValue('LM_STUDIO_MODEL', 'lmStudioModel');
     // Use runtime model from config if available, otherwise fallback to parameter or default
     const effectiveModel = config?.getModel?.() || model || DEFAULT_GEMINI_MODEL;
     const contentGeneratorConfig = {
@@ -172,6 +177,24 @@ export async function createContentGeneratorConfig(model, authType, config) {
         }
         return contentGeneratorConfig;
     }
+    
+    // LM Studio (local MLX models)
+    if (authType === AuthType.USE_LM_STUDIO) {
+        contentGeneratorConfig.apiKey = lmStudioApiKey || 'lm-studio';
+        contentGeneratorConfig.baseUrl = lmStudioBaseUrl || 'http://127.0.0.1:1234';
+        
+        // Use user-specified model or validate against LM Studio models
+        if (lmStudioModel && validateLMStudioModel(lmStudioModel)) {
+            contentGeneratorConfig.model = lmStudioModel;
+        } else if (effectiveModel && validateLMStudioModel(effectiveModel)) {
+            contentGeneratorConfig.model = effectiveModel;
+        } else {
+            contentGeneratorConfig.model = getDefaultLMStudioModel();
+        }
+        
+        return contentGeneratorConfig;
+    }
+    
     return contentGeneratorConfig;
 }
 export async function createContentGenerator(config, sessionId) {
