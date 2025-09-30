@@ -18,6 +18,8 @@ function getProviderSpecificUserAgent(authType, version) {
             return `AI-CLI-OpenAI/${version} (${platform}; ${arch})`;
         case AuthType.USE_LOCAL_LLM:
             return `AI-CLI-Local/${version} (${platform}; ${arch})`;
+        case AuthType.USE_LM_STUDIO:
+            return `AI-CLI-LMStudio/${version} (${platform}; ${arch})`;
         case AuthType.USE_AZURE:
             return `AI-CLI-Azure/${version} (${platform}; ${arch})`;
         case AuthType.LOGIN_WITH_GOOGLE:
@@ -35,6 +37,7 @@ export var AuthType;
     AuthType["USE_OPENAI_COMPATIBLE"] = "openai-compatible";
     AuthType["USE_ANTHROPIC"] = "anthropic";
     AuthType["USE_LOCAL_LLM"] = "local-llm";
+    AuthType["USE_LM_STUDIO"] = "lm-studio";
     AuthType["USE_AZURE"] = "azure";
 })(AuthType || (AuthType = {}));
 export async function createContentGeneratorConfig(model, authType, config) {

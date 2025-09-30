@@ -7,6 +7,7 @@ import { OpenAICompatibleContentGenerator } from './openaiCompatibleContentGener
 import { AnthropicContentGenerator } from './anthropicContentGenerator.js';
 import { AzureContentGenerator } from './azureContentGenerator.js';
 import { LocalLlmContentGenerator } from './localLlmContentGenerator.js';
+import { LMStudioContentGenerator } from './lmStudioContentGenerator.js';
 export function createCustomContentGenerator(authType, config) {
     // Debug log to file
     try {
@@ -27,6 +28,8 @@ export function createCustomContentGenerator(authType, config) {
             return new OpenAICompatibleContentGenerator(config);
         case 'local-llm':
             return new LocalLlmContentGenerator(config);
+        case 'lm-studio':
+            return new LMStudioContentGenerator(config);
         case 'anthropic':
             return new AnthropicContentGenerator(config);
         case 'azure':
@@ -46,5 +49,5 @@ export function registerContentGenerator(authType, generatorClass) {
     globalContentGeneratorRegistry.set(authType, generatorClass);
 }
 // Export all generators for direct use if needed
-export { OpenAICompatibleContentGenerator, AnthropicContentGenerator, LocalLlmContentGenerator };
+export { OpenAICompatibleContentGenerator, AnthropicContentGenerator, LocalLlmContentGenerator, LMStudioContentGenerator };
 //# sourceMappingURL=index.js.map
