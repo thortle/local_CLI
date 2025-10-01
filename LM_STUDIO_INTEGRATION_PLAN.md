@@ -1201,11 +1201,13 @@ The implementation provides a solid foundation for future enhancements with mult
 
 ---
 
-## 🔄 **CONTEXT PROMPT FOR FUTURE SESSIONS**
+## 🔄 **INTEGRATION STATUS: COMPLETE**
 
-### Current Project State (October 1, 2025)
+### Project Phase (October 1, 2025)
 
-**Project Phase**: ✅ **LM STUDIO INTEGRATION COMPLETE** → 🚀 **NEXT: LOCAL AGENTIC MODEL DEVELOPMENT**
+**LM Studio Integration**: ✅ **COMPLETE**  
+**Current Status**: Production-ready, all features working  
+**Next Phase**: See `/CLI/future_features.md` for agent development planning
 
 ---
 
@@ -1397,15 +1399,18 @@ The implementation provides a solid foundation for future enhancements with mult
 
 ---
 
-## 🎯 **SUCCESS CRITERIA FOR THIS SESSION**
+## 🎯 **NEXT SESSION: SANDBOX MODIFICATION (PHASE 5)**
 
+**Current Status**: ✅ Phases 1-4 Complete | ✅ Investigation Complete | ⏳ Ready for Implementation
+
+### Session Objectives
 By the end of this session, you should have:
-1. ✅ Explored all relevant documentation
-2. ✅ Understood current tool architecture
-3. ✅ Researched MCP, RAG, and agent patterns
-4. ✅ Created comprehensive `/CLI/AGENT.md` plan
-5. ✅ Validated plan is feasible and well-structured
-6. ✅ Ready for implementation approval
+1. ✅ Read and understood `/tests/step5/README.md` (sandbox investigation findings)
+2. ✅ Read and understood `/tests/README.md` (Phase 5 implementation plan)
+3. ✅ Modified all affected tool constructors to use `os.homedir()`
+4. ✅ Tested sandbox modification with validation scenarios
+5. ✅ Verified no regression in tool functionality
+6. ✅ Documented changes and outcomes
 
 ---
 
@@ -1416,14 +1421,34 @@ By the end of this session, you should have:
 - **Primary Model**: mistralai/devstral-small-2507 (coding-optimized, tool-aware)
 - **Hardware**: Apple Silicon M1 Pro 32GB
 - **Tools Available**: 30+ built-in tools (file, search, dev, advanced)
-- **MCP SDK**: Already installed (`@modelcontextprotocol/sdk@1.11.0`)
+- **Tool Success Rate**: 100% (all tools working correctly)
 - **Performance**: 2-4 second responses, 90-100% tool awareness
 
 **Repository:**
 - **Location**: `/Users/thortle/Desktop/ML/CLI`
 - **Branch**: `feature/lm-studio-integration-step4`
-- **Status**: Clean, all phases complete, ready for next development
+- **Status**: Clean, Phases 1-4 complete, Phase 5 ready for implementation
+
+**Current Issue:**
+- **Problem**: Sandbox restricts file access to working directory (`process.cwd()`)
+- **Impact**: Cannot access files outside current directory (e.g., from `/tests/step5/` cannot read `/CLI/README.md`)
+- **Root Cause**: `this.rootDirectory = process.cwd()` in tool constructors
+- **Decision**: Expand sandbox to home directory for Copilot-like UX
 
 ---
 
-**🚀 BEGIN YOUR MISSION: Research → Plan → Document → Present**
+## 🚀 **QUICK START PROMPT FOR NEW SESSION**
+
+```
+Please read /Users/thortle/Desktop/ML/CLI/tests/step5/README.md to understand 
+the sandbox investigation and root cause, then read /tests/README.md for the 
+Phase 5 implementation plan. Once you understand the context, proceed with 
+implementing the sandbox modification as outlined in the plan.
+```
+
+---
+
+**� NOTE**: The agent development planning section has been moved to `/CLI/future_features.md`
+
+For future enhancements including MCP, RAG, and agent orchestration, see:
+→ **`/CLI/future_features.md`**

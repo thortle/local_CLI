@@ -2,102 +2,109 @@
 
 Testing framework and validation for LM Studio integration into Gemini CLI Masters.
 
-**Project Status**: ✅ **COMPLETE** - All phases validated, CLI fully operational
-
-## Recent Completion (October 1, 2025)
-
-**Step 4: Tool Usage Investigation & CLI Fix** - ✅ Complete
-- Comprehensive investigation proving models ARE tool-aware (90-100% success)
-- Identified and fixed CLI timeout issue (telemetry blocking)
-- Reduced test suite from 24 to 4 essential scripts
-- Streamlined documentation from 950 to 255 lines
-- All validation passing, CLI performing optimally
+**Project Status**: ✅ Phase 1-4 Complete | ⏳ Phase 5 Implementation Ready
 
 ---
 
-## 📁 Directory Structure
+## Phase 5: Sandbox Modification - IMPLEMENTATION PLAN
 
+### Decision: Expand Sandbox to Home Directory
+
+**Root Cause**: Sandbox restricts file access to working directory (`process.cwd()`), preventing Copilot-like UX.
+
+**Solution**: Change sandbox root from working directory to home directory for single-user local setup.
+
+### Implementation Steps
+
+#### 1. Code Changes
+
+Modify constructor in each affected tool:
+
+**Files to Update** (in `/gemini-cli-masters-core/dist/src/tools/`):
+- `read-file.js`
+- `write-file.js`
+- `edit.js`
+- `ls.js`
+- `grep.js`
+- `file-discovery.js`
+- `read-many-files.js`
+
+**Change** (around line 41 in each constructor):
+```javascript
+// FROM:
+this.rootDirectory = process.cwd();
+
+// TO:
+const os = require('os');
+this.rootDirectory = os.homedir(); // or '/Users/thortle'
 ```
-tests/
-├── README.md                    # Testing framework overview (this file)
-├── step1/                       # Core Infrastructure tests
-│   ├── test-authtype.js        # AuthType enum validation
-│   ├── test-adapter.js         # LM Studio adapter creation
-│   ├── test-registry.js        # Adapter registry integration
-│   └── test-connection.js      # Connection validation
-├── step2/                       # Configuration System tests
-│   ├── test-models.js          # Model definitions and validation
-│   ├── test-config.js          # Configuration integration
-│   └── test-env-vars.js        # Environment variable handling
-├── step3/                       # CLI Integration tests
-│   ├── cli-integration.test.js # CLI integration testing
-│   ├── integration-workflow.test.js # Integration workflow testing
-│   └── README.md               # Step 3 debugging guide
-├── step4/                       # Tool Usage Investigation & CLI Fix ✅
-│   ├── README.md               # Complete investigation & fix documentation
-│   ├── quick-cli-test.sh       # Fast validation (30 seconds)
-│   ├── validate-cli-fix.js     # Comprehensive validation
-│   └── quick-reference.sh      # Status checker
-├── integration/                 # Full integration tests
-│   └── manual-integration-test.js # Manual end-to-end validation
-└── utils/                       # Test utilities
-    ├── run-tool-tests.js       # Tool calling test suite runner
-    ├── test-runner.js          # Automated test runner
-    ├── test-helpers.js         # Common test functions
-    └── test-lmstudio.js        # LM Studio specific utilities
+
+#### 2. Testing Validation
+
+Run from `/tests/step5/`:
+
+```bash
+# Test 1: Cross-directory access (previously blocked)
+gemini-masters "Read /Users/thortle/Desktop/ML/CLI/README.md and summarize"
+# Expected: ✅ Works
+
+# Test 2: Home directory files
+gemini-masters "Read ~/Documents/somefile.txt"
+# Expected: ✅ Works
+
+# Test 3: System files (should still be blocked)
+gemini-masters "Read /etc/passwd"
+# Expected: ❌ Blocked (outside home)
 ```
 
-## 🧪 Testing Phases
+#### 3. Security Boundaries
 
-### Phase 1: Core Infrastructure ✅
-Tests fundamental adapter components and registry integration.
+**Accessible** (within `/Users/thortle/`):
+- ✅ All projects and documents
+- ✅ User configs (`~/.config`, `~/.gemini`)
+- ✅ Downloads, Desktop, Documents
 
-**Run Tests:**
+**Protected** (outside home directory):
+- ❌ System files (`/System`, `/usr`, `/etc`)
+- ❌ Other users (`/Users/otheruser`)
+- ❌ Root-level directories
+
+### Rollback Plan
+
+If issues arise, revert to:
+```javascript
+this.rootDirectory = process.cwd();
+```
+
+---
+
+## Quick Reference
+
+### Run All Tests
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
+node utils/test-runner.js
+```
+
+### Phase-Specific Tests
+```bash
+# Phase 1: Core Infrastructure
 node utils/test-runner.js --phase=1
-```
 
-### Phase 2: Configuration System ✅  
-Tests model definitions, environment variables, and configuration integration.
-
-**Run Tests:**
-```bash
-cd /Users/thortle/Desktop/ML/CLI/tests
+# Phase 2: Configuration
 node utils/test-runner.js --phase=2
-```
 
-### Phase 3: CLI Integration ✅
-Tests CLI commands, authentication flow, and bundle integration.
-*See `step3/README.md` for detailed debugging information.*
-
-**Run Tests:**
-```bash
-cd /Users/thortle/Desktop/ML/CLI/tests
+# Phase 3: CLI Integration
 node utils/test-runner.js --phase=3
+
+# Phase 4: CLI Validation
+cd step4 && ./quick-cli-test.sh
 ```
 
-### Phase 4: Tool Usage Investigation & CLI Fix ✅ **COMPLETE**
-**Status**: Investigation complete, CLI timeout fixed, fully operational  
-**Key Findings**: 
-- Models ARE tool-aware (90-100% success rate)
-- CLI timeout caused by telemetry blocking
-- Fix: Disable telemetry in `~/.gemini/settings.json`
-- Performance: 2-4 sec simple queries, 20-27 sec tool calling
-
-*See `step4/README.md` for complete documentation, fix instructions, and validation tools.*
-
-**Quick Validation:**
-```bash
-cd /Users/thortle/Desktop/ML/CLI/tests/step4
-./quick-cli-test.sh        # 30-second validation
-node validate-cli-fix.js   # Comprehensive validation
-```
-
-### Full Integration ✅
-Tests complete end-to-end workflows and production deployment.
-
-**Run Tests:**
+### Detailed Documentation
+- **Phase 1-4**: See `/CLI/LM_STUDIO_INTEGRATION_PLAN.md`
+- **Phase 4 Debugging**: See `/tests/step4/README.md`
+- **Phase 5 Investigation**: See `/tests/step5/README.md`
 ```bash
 cd /Users/thortle/Desktop/ML/CLI/tests
 node integration/manual-integration-test.js

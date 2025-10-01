@@ -1,0 +1,12 @@
+{
+  "basicCalling": true,
+  "toolCapture": {
+    "error": "generator.generateText is not a function"
+  },
+  "contextInspection": {
+    "manual": true
+  },
+  "multiTurn": {
+    "manual": true
+  }
+}
