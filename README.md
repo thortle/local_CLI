@@ -33,30 +33,6 @@ local_CLI/
 ├── LICENSE                     # Apache 2.0 License
 └── README.md                   # This file (project overview)
 ```
----
-
-### Performance Metrics
-| Operation | Response Time | Status |
-|-----------|---------------|--------|
-| Simple queries | 2-4 seconds | Optimal |
-| Tool calling | 20-27 seconds | Working |
-| Complex searches | 27+ seconds | Working |
-
----
-
-## Quick Start
-
-```bash
-# Test CLI
-gemini-masters --auth-type lm-studio -p "What is 2+2?"
-
-# Validate installation
-cd tests/step4 && ./quick-cli-test.sh
-
-# Start interactive session
-gemini-masters
-# Choose "LM Studio" → Press Enter → Start chatting!
-```
 
 ---
 
@@ -72,21 +48,6 @@ gemini-masters
 
 ---
 
-## Built-in Tools (30+ Verified)
-
-### Core Categories
-- **File Operations** (5 tools) - read, write, edit, ls, batch reading
-- **Search & Discovery** (3 tools) - grep, glob patterns, file discovery
-- **Development** (4 tools) - shell, git, web fetch, web search
-- **Advanced** (4 tools) - memory, MCP client, tool registry
-- **Additional** (14+ tools) - Specialized utilities
-
-**Tool Performance**: 100% success rate with 2-4 second average response time.
-
-> **Detailed Tool Documentation**: See `/tests/step4/README.md` for complete tool investigation results.
-
----
-
 ## LM Studio Integration
 
 ### Features
@@ -96,68 +57,61 @@ gemini-masters
 - **Auto-Detection** - Discovers loaded models automatically
 - **No Configuration** - Works out of the box (localhost:1234)
 
-### Supported Models
-- **mistralai/devstral-small-2507** (default) - Coding optimized
-- **qwen/qwen3-coder-30b** - Large coding model
-- **microsoft/Phi-3.5-mini-instruct** - Lightweight
-- **meta-llama/Llama-3.2-3B-Instruct** - Efficient
-- Any MLX-compatible model loaded in LM Studio
-
-> **Integration Details**: See `LM_STUDIO_INTEGRATION_PLAN.md` for technical implementation.
-
 ---
 
-## Configuration
+### Core Dependencies
+- **`@google/genai`** ^1.8.0 - Google AI integration and Gemini API
+- **`@modelcontextprotocol/sdk`** ^1.11.0 - MCP protocol support
+- **`@opentelemetry/*`** - Comprehensive observability and telemetry
+- **`simple-git`** ^3.28.0 - Git repository operations
+- **`ws`** ^8.18.0 - WebSocket support for real-time communication
+- **`undici`** ^7.10.0 - Modern HTTP client
+- **`google-auth-library`** ^9.11.0 - Google authentication
+- **`glob`** ^10.4.5 - File pattern matching
+- **`micromatch`** ^4.0.8 - Advanced glob pattern matching
+
+### Development Stack
+- **TypeScript** → JavaScript compilation
+- **ESBuild** ^0.25.0 - Fast bundling and compilation
+- **Vitest** ^3.2.4 - Modern testing framework
+- **ESLint + Prettier** - Code quality and formatting
+- **Node.js** >=20.0.0 - Runtime requirement
+
+## Security & Sandboxing
+
+### macOS Sandbox Configurations
+Located in `bundle/sandbox-macos-*.sb`:
+
+- **`sandbox-macos-permissive-*`** - More open file/network access
+- **`sandbox-macos-restrictive-*`** - Limited permissions for security
+- **Network Variants:**
+  - `*-open.sb` - Allow all outbound network
+  - `*-closed.sb` - Deny outbound network
+  - `*-proxied.sb` - Route through localhost:8877 proxy
+
+### Security Features
+- Controlled file system access
+- Network access restrictions
+- Process execution limitations
+- Debugger port allowance (localhost:9229)
+
+### Authentication Options
+1. **Google Account** - Personal Google authentication
+2. **Gemini API Key** - From Google AI Studio
+3. **Azure OpenAI** - Enterprise Azure credentials
+4. **OpenAI API** - OpenAI API keys
+5. **Local Models** - Ollama configuration
+6. **LM Studio** - Local MLX-optimized models (no additional config needed)
 
 ### Environment Variables
 ```bash
-# Google Gemini
 export GEMINI_API_KEY="your_api_key"
-
+export AZURE_OPENAI_ENDPOINT="your_azure_endpoint"
+export OPENAI_API_KEY="your_openai_key"
 # LM Studio (optional - auto-detected)
 export LM_STUDIO_BASE_URL="http://127.0.0.1:1234"
 export LM_STUDIO_MODEL="mistralai/devstral-small-2507"
-
-# Other providers
-export OPENAI_API_KEY="your_openai_key"
-export AZURE_OPENAI_ENDPOINT="your_azure_endpoint"
 ```
-
-### Settings
-```bash
-# Disable telemetry (recommended)
-~/.gemini/settings.json → "telemetry": false
-```
-
----
-
-## Security
-
-### Sandbox System
-Located in `gemini-cli-masters/bundle/sandbox-macos-*.sb`:
-- **Permissive/Restrictive** modes
-- **Network variants**: open, closed, proxied
-- **File access controls** (Phase 5 modification planned)
-
-> **Current Status**: Tools restricted to working directory. Phase 5 will expand to home directory for better UX. See `/tests/README.md` for implementation plan.
-
----
-
-## Tech Stack
-
-**Core Dependencies**:
-- `@google/genai` ^1.8.0 - Gemini API
-- `@modelcontextprotocol/sdk` ^1.11.0 - MCP protocol
-- `@opentelemetry/*` - Telemetry
-- `simple-git` ^3.28.0 - Git operations
-- `undici` ^7.10.0 - HTTP client
-
-**Development**:
-- TypeScript → JavaScript compilation
-- ESBuild ^0.25.0 - Bundling
-- Vitest ^3.2.4 - Testing
-- Node.js >=20.0.0
-
 ---
 
 ## Installation
@@ -179,6 +133,12 @@ cd ..
 > **Note**: This is a modified version with LM Studio integration and enhanced tool descriptions. 
 > Installing via npm (`@ai-masters-community/gemini-cli-masters`) will give you the original version without these enhancements.
 
+---
+### Settings
+```bash
+# Disable telemetry (recommended)
+~/.gemini/settings.json → "telemetry": false
+```
 ---
 
 ### Dynamic Model Switching
@@ -239,60 +199,6 @@ Built-in tools provide comprehensive development workflow support with 30+ verif
 - Extended sandbox configurations
 
 
-### Core Dependencies
-- **`@google/genai`** ^1.8.0 - Google AI integration and Gemini API
-- **`@modelcontextprotocol/sdk`** ^1.11.0 - MCP protocol support
-- **`@opentelemetry/*`** - Comprehensive observability and telemetry
-- **`simple-git`** ^3.28.0 - Git repository operations
-- **`ws`** ^8.18.0 - WebSocket support for real-time communication
-- **`undici`** ^7.10.0 - Modern HTTP client
-- **`google-auth-library`** ^9.11.0 - Google authentication
-- **`glob`** ^10.4.5 - File pattern matching
-- **`micromatch`** ^4.0.8 - Advanced glob pattern matching
-
-### Development Stack
-- **TypeScript** → JavaScript compilation
-- **ESBuild** ^0.25.0 - Fast bundling and compilation
-- **Vitest** ^3.2.4 - Modern testing framework
-- **ESLint + Prettier** - Code quality and formatting
-- **Node.js** >=20.0.0 - Runtime requirement
-
-## Security & Sandboxing
-
-### macOS Sandbox Configurations
-Located in `bundle/sandbox-macos-*.sb`:
-
-- **`sandbox-macos-permissive-*`** - More open file/network access
-- **`sandbox-macos-restrictive-*`** - Limited permissions for security
-- **Network Variants:**
-  - `*-open.sb` - Allow all outbound network
-  - `*-closed.sb` - Deny outbound network
-  - `*-proxied.sb` - Route through localhost:8877 proxy
-
-### Security Features
-- Controlled file system access
-- Network access restrictions
-- Process execution limitations
-- Debugger port allowance (localhost:9229)
-
-### Authentication Options
-1. **Google Account** - Personal Google authentication
-2. **Gemini API Key** - From Google AI Studio
-3. **Azure OpenAI** - Enterprise Azure credentials
-4. **OpenAI API** - OpenAI API keys
-5. **Local Models** - Ollama configuration
-6. **LM Studio** - Local MLX-optimized models (no additional config needed)
-
-### Environment Variables
-```bash
-export GEMINI_API_KEY="your_api_key"
-export AZURE_OPENAI_ENDPOINT="your_azure_endpoint"
-export OPENAI_API_KEY="your_openai_key"
-# LM Studio (optional - auto-detected)
-export LM_STUDIO_BASE_URL="http://127.0.0.1:1234"
-export LM_STUDIO_MODEL="mistralai/devstral-small-2507"
-```
-
 ##  LM Studio Integration
 
 This development environment includes **complete LM Studio integration** for Apple Silicon users:
@@ -351,3 +257,11 @@ gemini-masters
 - **Image Analysis** - Process diagrams, screenshots, mockups
 - **Document Processing** - Extract information from PDFs
 - **Media Generation** - Integration with Imagen, Veo, Lyria (via MCP)
+
+### Performance Metrics
+| Operation | Response Time | Status |
+|-----------|---------------|--------|
+| Simple queries | 2-4 seconds | Optimal |
+| Tool calling | 20-27 seconds | Working |
+| Complex searches | 27+ seconds | Working |
+'''
