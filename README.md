@@ -38,6 +38,11 @@ local_CLI/
 
 ## AI Provider Support
 
+### NOTE: 
+The project is far from complete. It is a personal side-project. Future updates will include stability improvements, bug fixes, agentic RAG, MCP tools, knowledge graphs and more.
+
+Special thanks to AI Masters Community for the initial fork.
+
 ### Supported Providers
 - **Google Gemini** (original) - Gemini 2.5 Pro/Flash
 - **LM Studio** NEW - MLX-optimized local models for Apple Silicon
