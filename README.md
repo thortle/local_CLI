@@ -1,4 +1,4 @@
-# local_CLI - Local Development Environment
+# local_CLI
 
 local_CLI is a forked version of Google's Gemini CLI. The initial fork was done by AI Masters Community(https://www.skool.com/ai-masters-community), which added the possibility of changing the model provider (ollama, OpenAI, Anthropic, Azure). This version adds LM Studio as an option (MLX format available).
 
