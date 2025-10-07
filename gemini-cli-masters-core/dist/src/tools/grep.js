@@ -33,8 +33,9 @@ export class GrepTool extends BaseTool {
                     type: 'string',
                 },
                 path: {
-                    description: 'Optional: The absolute path to the directory to search within. If omitted, searches the current working directory.',
+                    description: 'Optional: The absolute path to a directory OR file to search within. If a directory, searches all files recursively. If a file, searches only that specific file. If omitted, searches the current working directory. Must be an absolute path starting with /.',
                     type: 'string',
+                    pattern: '^/',
                 },
                 include: {
                     description: "Optional: A glob pattern to filter which files are searched (e.g., '*.js', '*.{ts,tsx}', 'src/**'). If omitted, searches all files (respecting potential global ignores).",
@@ -52,8 +53,8 @@ export class GrepTool extends BaseTool {
     /**
      * Checks if a path is within the root directory and resolves it.
      * @param relativePath Path relative to the root directory (or undefined for root).
-     * @returns The absolute path if valid and exists.
-     * @throws {Error} If path is outside root, doesn't exist, or isn't a directory.
+     * @returns Object with targetPath, isFile, and isDirectory flags.
+     * @throws {Error} If path is outside root, doesn't exist, or isn't a file/directory.
      */
     resolveAndValidatePath(relativePath) {
         const targetPath = path.resolve(this.rootDirectory, relativePath || '.');
@@ -65,17 +66,22 @@ export class GrepTool extends BaseTool {
         // Check existence and type after resolving
         try {
             const stats = fs.statSync(targetPath);
-            if (!stats.isDirectory()) {
-                throw new Error(`Path is not a directory: ${targetPath}`);
+            // Accept both files and directories
+            if (!stats.isDirectory() && !stats.isFile()) {
+                throw new Error(`Path is neither a file nor a directory: ${targetPath}`);
             }
+            return {
+                targetPath,
+                isFile: stats.isFile(),
+                isDirectory: stats.isDirectory()
+            };
         }
         catch (error) {
-            if (isNodeError(error) && error.code !== 'ENOENT') {
+            if (isNodeError(error) && error.code === 'ENOENT') {
                 throw new Error(`Path does not exist: ${targetPath}`);
             }
             throw new Error(`Failed to access path stats for ${targetPath}: ${error}`);
         }
-        return targetPath;
     }
     /**
      * Validates the parameters for the tool
@@ -115,13 +121,19 @@ export class GrepTool extends BaseTool {
                 returnDisplay: `Model provided invalid parameters. Error: ${validationError}`,
             };
         }
-        let searchDirAbs;
         try {
-            searchDirAbs = this.resolveAndValidatePath(params.path);
+            const pathInfo = this.resolveAndValidatePath(params.path);
             const searchDirDisplay = params.path || '.';
+            
+            // Handle single file search
+            if (pathInfo.isFile) {
+                return await this.searchSingleFile(pathInfo.targetPath, params.pattern, signal);
+            }
+            
+            // Handle directory search (existing behavior)
             const matches = await this.performGrepSearch({
                 pattern: params.pattern,
-                path: searchDirAbs,
+                path: pathInfo.targetPath,
                 include: params.include,
                 signal,
             });
@@ -130,7 +142,7 @@ export class GrepTool extends BaseTool {
                 return { llmContent: noMatchMsg, returnDisplay: `No matches found` };
             }
             const matchesByFile = matches.reduce((acc, match) => {
-                const relativeFilePath = path.relative(searchDirAbs, path.resolve(searchDirAbs, match.filePath)) || path.basename(match.filePath);
+                const relativeFilePath = path.relative(pathInfo.targetPath, path.resolve(pathInfo.targetPath, match.filePath)) || path.basename(match.filePath);
                 if (!acc[relativeFilePath]) {
                     acc[relativeFilePath] = [];
                 }
@@ -160,6 +172,67 @@ export class GrepTool extends BaseTool {
             return {
                 llmContent: `Error during grep search operation: ${errorMessage}`,
                 returnDisplay: `Error: ${errorMessage}`,
+            };
+        }
+    }
+    /**
+     * Searches for a pattern within a single file
+     * @param filePath Absolute path to the file to search
+     * @param pattern Regular expression pattern to search for
+     * @param signal Optional abort signal
+     * @returns Result of the search
+     */
+    async searchSingleFile(filePath, pattern, signal) {
+        try {
+            const content = await fsPromises.readFile(filePath, 'utf-8');
+            const lines = content.split('\n');
+            const regex = new RegExp(pattern);
+            const matches = [];
+            
+            lines.forEach((line, index) => {
+                if (signal?.aborted) {
+                    throw new Error('Search aborted');
+                }
+                if (regex.test(line)) {
+                    matches.push({
+                        filePath: path.basename(filePath),
+                        lineNumber: index + 1,
+                        line: line
+                    });
+                }
+            });
+            
+            if (matches.length === 0) {
+                return {
+                    llmContent: `No matches found for pattern "${pattern}" in file "${path.basename(filePath)}".`,
+                    returnDisplay: 'No matches found'
+                };
+            }
+            
+            const matchCount = matches.length;
+            const matchTerm = matchCount === 1 ? 'match' : 'matches';
+            let llmContent = `Found ${matchCount} ${matchTerm} for pattern "${pattern}" in file "${path.basename(filePath)}":\n---\n`;
+            llmContent += `File: ${path.basename(filePath)}\n`;
+            matches.forEach(match => {
+                llmContent += `L${match.lineNumber}: ${match.line.trim()}\n`;
+            });
+            llmContent += '---';
+            
+            return {
+                llmContent: llmContent.trim(),
+                returnDisplay: `Found ${matchCount} ${matchTerm}`
+            };
+        } catch (error) {
+            if (signal?.aborted) {
+                return {
+                    llmContent: 'Search operation was aborted.',
+                    returnDisplay: 'Search aborted'
+                };
+            }
+            const errorMessage = getErrorMessage(error);
+            return {
+                llmContent: `Error reading file: ${errorMessage}`,
+                returnDisplay: `Error: ${errorMessage}`
             };
         }
     }

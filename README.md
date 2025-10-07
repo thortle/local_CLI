@@ -1,31 +1,50 @@
-# Gemini CLI Masters - Local Development Environment
+# local_CLI - Local Development Environment
 
-A local development copy of **Gemini CLI Masters**, a fork of Google's Gemini CLI by the **AI Masters Pro Community**. An advanced command-line AI workflow tool with multi-provider support and 30+ built-in tools.
+local_CLI is a forked version of Google's Gemini CLI. The initial fork was done by AI Masters Community(https://www.skool.com/ai-masters-community), which added the possibility of changing the model provider (ollama, OpenAI, Anthropic, Azure). This version adds LM Studio as an option (MLX format available).
+
+An advanced command-line AI workflow tool with multi-provider support and 30+ built-in tools.
 
 ---
 
-## � Project Status (October 1, 2025)
+## Project Structure
 
-**✅ Phase 1-4 COMPLETE** - LM Studio integration fully functional  
-**⏳ Phase 5 READY** - Sandbox modification ready for implementation
-
-### Recent Completion
-- ✅ LM Studio integration (custom adapter + authentication)
-- ✅ Tool discovery (30+ tools verified)
-- ✅ Tool calling investigation (90-100% success rate)
-- ✅ CLI timeout fix (telemetry issue resolved)
-- ✅ Sandbox investigation (root cause identified, solution approved)
+```
+local_CLI/
+├── gemini-cli-masters-core/    # Core package (v0.1.42)
+│   ├── dist/src/               # Compiled source code
+│   │   ├── adapters/           # AI provider adapters
+│   │   ├── config/             # Configuration system
+│   │   ├── core/               # Client & chat logic
+│   │   ├── tools/              # 30+ built-in tools
+│   │   ├── services/           # File & Git services
+│   │   └── utils/              # Utilities
+│   ├── package.json
+│   ├── LICENSE
+│   └── README.md               # Core package documentation
+│
+├── gemini-cli-masters/         # CLI package (v0.1.42)
+│   ├── bundle/
+│   │   ├── gemini.js          # Main executable (bundled)
+│   │   └── sandbox-macos-*.sb # Security sandbox configs
+│   ├── package.json
+│   ├── LICENSE
+│   └── README.md               # CLI package documentation
+│
+├── LICENSE                     # Apache 2.0 License
+└── README.md                   # This file (project overview)
+```
+---
 
 ### Performance Metrics
 | Operation | Response Time | Status |
 |-----------|---------------|--------|
-| Simple queries | 2-4 seconds | ✅ Optimal |
-| Tool calling | 20-27 seconds | ✅ Working |
-| Complex searches | 27+ seconds | ✅ Working |
+| Simple queries | 2-4 seconds | Optimal |
+| Tool calling | 20-27 seconds | Working |
+| Complex searches | 27+ seconds | Working |
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Test CLI
@@ -41,65 +60,19 @@ gemini-masters
 
 ---
 
-## 📦 Project Structure
-
-```
-CLI/
-├── gemini-cli-masters-core/    # Core package (v0.1.42)
-│   ├── dist/src/               # Compiled source code
-│   │   ├── adapters/           # AI provider adapters
-│   │   ├── config/             # Configuration system
-│   │   ├── core/               # Client & chat logic
-│   │   ├── tools/              # 30+ built-in tools
-│   │   ├── services/           # File & Git services
-│   │   └── utils/              # Utilities
-│   ├── package.json
-│   └── README.md               # Core package documentation
-│
-├── gemini-cli-masters/         # CLI package (v0.1.42)
-│   ├── bundle/
-│   │   ├── gemini.js          # Main executable (bundled)
-│   │   └── sandbox-macos-*.sb # Security sandbox configs
-│   ├── package.json
-│   └── README.md               # CLI package documentation
-│
-├── tests/                      # Test suite
-│   ├── step1/                 # Core infrastructure tests
-│   ├── step2/                 # Configuration tests
-│   ├── step3/                 # CLI integration tests
-│   ├── step4/                 # Tool verification & CLI fix
-│   ├── step5/                 # Sandbox investigation
-│   ├── utils/                 # Test utilities
-│   └── README.md              # Testing framework & Phase 5 plan
-│
-├── README.md                   # This file (project overview)
-├── LM_STUDIO_INTEGRATION_PLAN.md  # Integration details
-└── future_features.md          # Agent development roadmap
-```
-
----
-
-## 🤖 AI Provider Support
+## AI Provider Support
 
 ### Supported Providers
 - **Google Gemini** (original) - Gemini 2.5 Pro/Flash
-- **LM Studio** ⭐ NEW - MLX-optimized local models for Apple Silicon
+- **LM Studio** NEW - MLX-optimized local models for Apple Silicon
 - **OpenAI** - GPT-4o and compatible models
 - **Anthropic** - Claude 3.5 Sonnet and variants
 - **Azure OpenAI** - Enterprise-grade models
 - **Ollama** - Local model execution
 
-### Dynamic Model Switching
-Switch providers on-the-fly:
-```bash
-> /model lmstudio    # Switch to LM Studio
-> /model claude      # Switch to Claude
-> /model openai      # Switch to OpenAI
-```
-
 ---
 
-## 🛠️ Built-in Tools (30+ Verified)
+## Built-in Tools (30+ Verified)
 
 ### Core Categories
 - **File Operations** (5 tools) - read, write, edit, ls, batch reading
@@ -114,9 +87,9 @@ Switch providers on-the-fly:
 
 ---
 
-## 🆕 LM Studio Integration
+## LM Studio Integration
 
-### Features ✅
+### Features
 - **CLI Authentication** - Select "LM Studio" from auth menu
 - **Tool Calling** - All file operations and built-in tools working
 - **MLX Optimization** - Apple Silicon hardware acceleration
@@ -134,7 +107,7 @@ Switch providers on-the-fly:
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### Environment Variables
 ```bash
@@ -158,7 +131,7 @@ export AZURE_OPENAI_ENDPOINT="your_azure_endpoint"
 
 ---
 
-## 🔒 Security
+## Security
 
 ### Sandbox System
 Located in `gemini-cli-masters/bundle/sandbox-macos-*.sb`:
@@ -170,66 +143,7 @@ Located in `gemini-cli-masters/bundle/sandbox-macos-*.sb`:
 
 ---
 
-## 🧪 Development & Testing
-
-### Test Suite
-```bash
-# Run all tests
-cd tests && node utils/test-runner.js
-
-# Phase-specific tests
-node utils/test-runner.js --phase=1  # Core infrastructure
-node utils/test-runner.js --phase=2  # Configuration
-node utils/test-runner.js --phase=3  # CLI integration
-
-# Quick validation
-cd tests/step4 && ./quick-cli-test.sh
-```
-
-### Development Workflow
-1. Create feature branch
-2. Modify source code (TypeScript or JavaScript)
-3. Test changes using test suite
-4. Build & bundle for production
-5. Deploy globally with `npm install -g`
-
-> **Testing Documentation**: See `/tests/README.md` for framework overview and Phase 5 implementation plan.  
-> **Debugging Guide**: See `/tests/step3/README.md` for CLI troubleshooting.  
-> **Investigation Results**: See `/tests/step4/README.md` for tool calling validation.  
-> **Sandbox Findings**: See `/tests/step5/README.md` for debugging process.
-
----
-
-## 💡 Key Capabilities
-
-- **Large Context Handling** - 1M+ token support for massive codebases
-- **Tool Ecosystem** - 30+ built-in tools + MCP server integration
-- **Multimodal Support** - Image analysis, document processing
-- **Workflow Automation** - Code generation, refactoring, review
-- **Enterprise Ready** - Audit logging, security controls, multi-tenant
-
----
-
-## 📚 Documentation Index
-
-### Project Documentation
-- **`README.md`** (this file) - Project overview and quick reference
-- **`LM_STUDIO_INTEGRATION_PLAN.md`** - LM Studio integration technical details
-- **`future_features.md`** - Agent development roadmap
-
-### Package Documentation
-- **`gemini-cli-masters-core/README.md`** - Core package API and architecture
-- **`gemini-cli-masters/README.md`** - CLI usage and commands
-
-### Testing & Development
-- **`tests/README.md`** - Testing framework + Phase 5 implementation plan
-- **`tests/step3/README.md`** - CLI integration debugging guide
-- **`tests/step4/README.md`** - Tool calling investigation results
-- **`tests/step5/README.md`** - Sandbox investigation debugging process
-
----
-
-## 🔧 Technology Stack
+## Tech Stack
 
 **Core Dependencies**:
 - `@google/genai` ^1.8.0 - Gemini API
@@ -246,147 +160,73 @@ cd tests/step4 && ./quick-cli-test.sh
 
 ---
 
-## 📍 Installation
+## Installation
 
-**Global**: Installed at `/opt/homebrew/bin/gemini-masters`  
-**Local Dev**: `/Users/thortle/Desktop/ML/CLI/`  
-**Status**: Enhanced version with LM Studio integration deployed globally
+```bash
+# Clone this repository to get the LM Studio-enhanced version
+git clone https://github.com/[your-username]/local_CLI.git
+cd local_CLI
+
+# Install dependencies (if needed)
+cd gemini-cli-masters-core
+npm install
+cd ..
+
+# The CLI is bundled and ready to use
+./gemini-cli-masters/bundle/gemini.js --help
+```
+
+> **Note**: This is a modified version with LM Studio integration and enhanced tool descriptions. 
+> Installing via npm (`@ai-masters-community/gemini-cli-masters`) will give you the original version without these enhancements.
 
 ---
-
-**Developed by**: AI Masters Pro Community  
-**Based on**: Google's Gemini CLI  
-**License**: See LICENSE files in each package
-
-```
-├── gemini-cli-masters-core/     # Core package (v0.1.42)
-│   ├── dist/                    # Compiled TypeScript → JavaScript
-│   │   └── src/                 # Source code modules
-│   │       ├── adapters/        # AI provider adapters
-│   │       │   ├── anthropicContentGenerator.js
-│   │       │   ├── azureContentGenerator.js
-│   │       │   ├── localLlmContentGenerator.js
-│   │       │   └── openaiCompatibleContentGenerator.js
-│   │       ├── config/          # Configuration management
-│   │       │   ├── config.js    # Main configuration system
-│   │       │   └── models.js    # Model definitions
-│   │       ├── core/            # Core client & chat logic
-│   │       │   ├── client.js    # Main GeminiClient
-│   │       │   ├── geminiChat.js
-│   │       │   ├── contentGenerator.js
-│   │       │   └── turn.js      # Conversation management
-│   │       ├── tools/           # Built-in CLI tools (20+ tools)
-│   │       │   ├── read-file.js
-│   │       │   ├── write-file.js
-│   │       │   ├── edit.js
-│   │       │   ├── shell.js
-│   │       │   ├── grep.js
-│   │       │   ├── mcp-client.js
-│   │       │   └── ... (and more)
-│   │       ├── services/        # File & Git services
-│   │       ├── telemetry/       # OpenTelemetry integration
-│   │       └── utils/           # Utility functions
-│   ├── LICENSE
-│   ├── package.json
-│   ├── README.md
-│   └── node_modules/
-├── gemini-cli-masters/          # Main CLI package (v0.1.42)
-│   ├── bundle/                  # Bundled executable & configs
-│   │   ├── gemini.js           # Main executable (266k+ lines bundled)
-│   │   └── sandbox-macos-*.sb  # macOS sandbox security configs
-│   ├── LICENSE
-│   ├── package.json
-│   └── README.md
-├── tests/                       # LM Studio integration test suite
-│   ├── README.md               # Test documentation and phase overview
-│   ├── STEP4_CLEANUP_SUMMARY.md # Step 4 cleanup documentation
-│   ├── step1/                  # Core Infrastructure tests
-│   │   ├── test-authtype.js   # AuthType enum validation
-│   │   ├── test-adapter.js    # LM Studio adapter creation
-│   │   ├── test-registry.js   # Adapter registry integration
-│   │   └── test-connection.js # Connection validation
-│   ├── step2/                  # Configuration System tests
-│   │   ├── test-models.js     # Model definitions and validation
-│   │   ├── test-config.js     # Configuration integration
-│   │   └── test-env-vars.js   # Environment variable handling
-│   ├── step3/                  # CLI Integration tests
-│   │   ├── cli-integration.test.js      # CLI integration testing
-│   │   ├── integration-workflow.test.js # Integration workflow testing
-│   │   └── README.md          # Step 3 documentation
-│   ├── step4/                  # Tool Calling Verification & CLI Fix (COMPLETE)
-│   │   ├── README.md          # Investigation results and CLI fix documentation
-│   │   ├── quick-cli-test.sh  # Fast 30-second validation
-│   │   ├── validate-cli-fix.js # Comprehensive validation script
-│   │   └── quick-reference.sh # Status checker and quick commands
-│   ├── integration/            # Full integration tests
-│   │   └── manual-integration-test.js # End-to-end validation
-│   └── utils/                  # Test utilities
-│       ├── run-tool-tests.js  # Tool calling test suite runner
-│       ├── test-runner.js     # Automated test runner
-│       ├── test-helpers.js    # Common test functions
-│       └── test-lmstudio.js   # LM Studio specific utilities
-├── LM_STUDIO_INTEGRATION_PLAN.md # Integration plan and completion status
-└── README.md                   # This file
-```
-
-## 🤖 AI Provider Support
-
-The CLI supports multiple AI providers through dedicated adapters:
-
-### Supported Providers
-- **Google Gemini** (original) - Default provider with Gemini 2.5 Pro/Flash
-- **Azure OpenAI** - Enterprise-grade OpenAI models via Azure
-- **OpenAI Compatible Models** - Including GPT-4o and other OpenAI models
-- **Anthropic Claude Models** - Claude 3.5 Sonnet and other Claude variants
-- **Local LLM (Ollama)** - Local model execution with tool support
-- **LM Studio** - MLX-optimized local models for Apple Silicon (NEW!)
 
 ### Dynamic Model Switching
 - Switch models on-the-fly using `/model (local, claude, openai, lmstudio)` command
 - Models must support function calling for full tool integration
 - Local models must be pre-downloaded and configured
 
-## 🛠️ Core Tools & Capabilities (30+ Tools Discovered & Verified)
+## Core Tools & Capabilities (30+ Tools Discovered & Verified)
 
 Built-in tools provide comprehensive development workflow support with 30+ verified working tools:
 
-### File Operations (5 Core Tools) ✅
-- **`read-file.js`** ✅ - Read files with line ranges and intelligent chunking
-- **`write-file.js`** ✅ - Create and write files with backup handling
-- **`edit.js`** ✅ - Advanced file editing with diff tracking and validation
-- **`ls.js`** ✅ - Directory listing with filtering and git-aware options
-- **`read-many-files.js`** ✅ - Batch file reading with concurrent processing
+### File Operations (5 Core Tools) 
+- **`read-file.js`** - Read files with line ranges and intelligent chunking
+- **`write-file.js`** - Create and write files with backup handling
+- **`edit.js`** - Advanced file editing with diff tracking and validation
+- **`ls.js`** - Directory listing with filtering and git-aware options
+- **`read-many-files.js`** - Batch file reading with concurrent processing
 
-### Search & Discovery (3 Tools) ✅
-- **`grep.js`** ✅ - Text search with regex support and context display
-- **`glob.js`** ✅ - Pattern-based file discovery with gitignore support
-- **`file-discovery.js`** ✅ - Intelligent file discovery with project analysis
+### Search & Discovery (3 Tools)
+- **`grep.js`** - Text search with regex support and context display
+- **`glob.js`** - Pattern-based file discovery with gitignore support
+- **`file-discovery.js`** - Intelligent file discovery with project analysis
 
-### Development Integration (4 Tools) ✅
-- **`shell.js`** ✅ - Execute shell commands with security controls
-- **`git.js`** ✅ - Git operations and repository management
-- **`web-fetch.js`** ✅ - HTTP requests with caching and error handling
-- **`web-search.js`** ✅ - Web search integration with multiple providers
+### Development Integration (4 Tools)
+- **`shell.js`** - Execute shell commands with security controls
+- **`git.js`** - Git operations and repository management
+- **`web-fetch.js`** - HTTP requests with caching and error handling
+- **`web-search.js`** - Web search integration with multiple providers
 
-### Advanced Features (4 Tools) ✅
-- **`memoryTool.js`** ✅ - Persistent memory across sessions
-- **`mcp-client.js`** ✅ - Model Context Protocol client implementation
-- **`mcp-tool.js`** ✅ - MCP server tools integration
-- **`tool-registry.js`** ✅ - Dynamic tool registration and management
+### Advanced Features (4 Tools)
+- **`memoryTool.js`** - Persistent memory across sessions
+- **`mcp-client.js`** - Model Context Protocol client implementation
+- **`mcp-tool.js`** - MCP server tools integration
+- **`tool-registry.js`** - Dynamic tool registration and management
 
-### Additional Tools (14+ More) ✅
-- **`modifiable-tool.js`** ✅ - Runtime tool modification capabilities
-- **`diffOptions.js`** ✅ - Advanced diff and comparison utilities
-- **`tools.js`** ✅ - Base tool classes and architecture
+### Additional Tools (14+ More)
+- **`modifiable-tool.js`** - Runtime tool modification capabilities
+- **`diffOptions.js`** - Advanced diff and comparison utilities
+- **`tools.js`** - Base tool classes and architecture
 - *...and 11+ additional specialized tools in the ecosystem*
 
-### ⚡ Tool Performance Metrics (Verified)
+### Tool Performance Metrics (Verified)
 - **API Integration**: 100% compatible with LM Studio OpenAI API
 - **Response Time**: 2-4 seconds average for tool operations  
 - **Success Rate**: 100% for file operations and core functionality
 - **Model Support**: Confirmed working with Devstral, Qwen, and compatible models
 
-## ⚙️ Enhanced Features by AI Masters Community
+## Enhanced Features
 
 ### Command Extensions
 - **`/plan`** - Enter interactive planning mode
@@ -396,25 +236,8 @@ Built-in tools provide comprehensive development workflow support with 30+ verif
 ### Workflow Improvements
 - Multi-provider authentication management
 - Enhanced tool capabilities
-- Improved context management
 - Extended sandbox configurations
 
-## 🏛️ Architecture Overview
-
-### Core Components
-- **`GeminiClient`** - Main client orchestrating AI interactions
-- **`GeminiChat`** - Chat session and conversation management
-- **`ContentGenerator`** - Provider abstraction layer
-- **`ToolRegistry`** - Tool discovery and execution management
-- **`Turn`** - Individual conversation turn handling
-
-### Configuration System
-- **Flexible Model Configuration** - Support for multiple providers
-- **Sandbox Environment** - Secure execution environments
-- **Telemetry Integration** - OpenTelemetry observability
-- **Authentication Framework** - Multi-provider auth support
-
-## 📦 Technology Stack & Dependencies
 
 ### Core Dependencies
 - **`@google/genai`** ^1.8.0 - Google AI integration and Gemini API
@@ -434,7 +257,7 @@ Built-in tools provide comprehensive development workflow support with 30+ verif
 - **ESLint + Prettier** - Code quality and formatting
 - **Node.js** >=20.0.0 - Runtime requirement
 
-## 🔒 Security & Sandboxing
+## Security & Sandboxing
 
 ### macOS Sandbox Configurations
 Located in `bundle/sandbox-macos-*.sb`:
@@ -451,14 +274,6 @@ Located in `bundle/sandbox-macos-*.sb`:
 - Network access restrictions
 - Process execution limitations
 - Debugger port allowance (localhost:9229)
-
-## 🚀 Installation & Usage
-
-### Global Installation
-```bash
-npm install -g @ai-masters-community/gemini-cli-masters-core@latest @ai-masters-community/gemini-cli-masters@latest
-gemini-masters
-```
 
 ### Authentication Options
 1. **Google Account** - Personal Google authentication
@@ -478,18 +293,18 @@ export LM_STUDIO_BASE_URL="http://127.0.0.1:1234"
 export LM_STUDIO_MODEL="mistralai/devstral-small-2507"
 ```
 
-## 🆕 LM Studio Integration - COMPLETE! ✅
+##  LM Studio Integration
 
 This development environment includes **complete LM Studio integration** for Apple Silicon users:
 
-### Features ✅ **ALL WORKING**
-- **✅ CLI Authentication**: Choose "LM Studio" from auth menu - fully functional
-- **✅ Tool Calling**: File operations, content analysis, and built-in tools working
-- **✅ Model Switching**: Use `/model lmstudio` command or `--auth-type lm-studio`
-- **✅ MLX Optimization**: Leverages Apple Silicon hardware acceleration
-- **✅ Auto-Detection**: Automatically discovers models loaded in LM Studio
-- **✅ No API Keys**: Works with local LM Studio instance (localhost:1234)
-- **✅ Fast Performance**: 1-3 second response times for most operations
+### Features
+- ** CLI Authentication**: Choose "LM Studio" from auth menu - fully functional
+- ** Tool Calling**: File operations, content analysis, and built-in tools working
+- ** Model Switching**: Use `/model lmstudio` command or `--auth-type lm-studio`
+- ** MLX Optimization**: Leverages Apple Silicon hardware acceleration
+- ** Auto-Detection**: Automatically discovers models loaded in LM Studio
+- ** No API Keys**: Works with local LM Studio instance (localhost:1234)
+- ** Fast Performance**: 1-3 second response times for most operations
 - **Model Switching**: Use `/model lmstudio` command to switch to local models
 - **MLX Optimization**: Leverages Apple Silicon hardware acceleration
 - **Auto-Detection**: Automatically discovers models loaded in LM Studio
@@ -505,18 +320,14 @@ gemini-masters
 # 4. Press Enter when prompted - no config needed
 # 5. Start chatting with local models!
 
-# Or switch to LM Studio anytime:
-> /model lmstudio
-```
-
 ### Supported Models
-- **mistralai/devstral-small-2507** (default) - Coding optimized
+- **mistralai/devstral-small-2507** - Coding optimized
 - **qwen/qwen3-coder-30b** - Large coding model  
 - **microsoft/Phi-3.5-mini-instruct** - Lightweight general purpose
 - **meta-llama/Llama-3.2-3B-Instruct** - Efficient instruction following
 - And any other MLX-compatible models loaded in LM Studio
 
-## 💡 Use Cases & Capabilities
+## Use Cases & Capabilities
 
 ### Code Development
 - **Large Codebase Exploration** - Navigate codebases beyond 1M token limits
@@ -540,122 +351,3 @@ gemini-masters
 - **Image Analysis** - Process diagrams, screenshots, mockups
 - **Document Processing** - Extract information from PDFs
 - **Media Generation** - Integration with Imagen, Veo, Lyria (via MCP)
-
-## 🧪 Development Environment Features
-
-### Enhanced Development Environment
-
-This development environment provides comprehensive capabilities:
-
-✅ **Production-Ready Integration** - LM Studio integration deployed globally  
-✅ **Version Control Ready** - Full git integration for tracking changes  
-✅ **Feature Development** - Complete testing framework for safe development  
-✅ **Source Code Access** - Full access to core implementation and tools  
-✅ **Custom Extensions** - Framework for adding custom tools and adapters  
-✅ **Comprehensive Testing** - Multi-phase test suite for validation  
-
-### Package Information
-- **gemini-cli-masters-core (v0.1.42)** - Core functionality, tools, and utilities
-- **gemini-cli-masters (v0.1.42)** - CLI interface and bundled application  
-- **LM Studio Integration** - Complete integration with authentication and model switching
-- **Main Entry**: `dist/index.js` (core) and `bundle/gemini.js` (CLI with LM Studio support)
-
-## 🔧 Development Workflow
-
-### Current Development Status
-- **LM Studio Integration**: ✅ Complete (Steps 1-4 implemented, tested, and validated)
-- **Global Deployment**: ✅ Enhanced version installed globally via `npm install -g`
-- **Testing Framework**: ✅ Comprehensive multi-phase test suite (all phases complete)
-- **Documentation**: ✅ Streamlined documentation with essential guides only
-- **CLI Fix Applied**: ✅ Telemetry timeout issue resolved in production
-
-### Source Code Exploration
-1. **Core Logic**: `gemini-cli-masters-core/dist/src/core/` - Client and chat management
-2. **Tools**: `gemini-cli-masters-core/dist/src/tools/` - Built-in tool implementations
-3. **Adapters**: `gemini-cli-masters-core/dist/src/adapters/` - AI provider integrations
-4. **Configuration**: `gemini-cli-masters-core/dist/src/config/` - System configuration
-5. **Bundle**: `gemini-cli-masters/bundle/gemini.js` - Modified executable with LM Studio support
-
-### Future Development Workflow
-1. **Create Feature Branch** - `git checkout -b feature/your-feature`
-2. **Modify Source Code** - Edit TypeScript files or JavaScript directly
-3. **Test Changes** - Use comprehensive test suite in `/tests`
-4. **Build & Bundle** - Compile changes for production
-5. **Deploy Globally** - Install enhanced version globally
-
-### Build Scripts
-```bash
-npm run build          # Build packages
-npm run bundle         # Create bundled executable
-npm run test          # Run test suite
-npm run lint          # Code quality checks
-npm run format        # Code formatting
-
-# Testing LM Studio Integration
-cd tests && node utils/test-runner.js --all  # Run all integration tests
-```
-
-## 🌟 Advanced Capabilities
-
-### Model Context Protocol (MCP)
-- **Server Integration** - Connect to MCP-enabled services
-- **Tool Expansion** - Add external tools via MCP protocol
-- **Service Composition** - Combine multiple services seamlessly
-
-### Large Context Handling
-- **1M+ Token Support** - Handle massive codebases
-- **Context Compression** - Intelligent context summarization
-- **Memory Management** - Persistent conversation memory
-- **Token Optimization** - Efficient token usage strategies
-
-### Enterprise Features
-- **Multi-tenant Support** - Team and organization management
-- **Audit Logging** - Comprehensive telemetry and logging
-- **Security Controls** - Sandbox execution and access controls
-- **Scalable Architecture** - Production-ready deployment
-
----
-
-## 📍 Installation Status
-
-- **Current Global Installation**: This local development version with LM Studio integration
-- **Installation Path**: `/opt/homebrew/bin/gemini-masters` (via `npm install -g`)
-- **Local Development**: `~/Desktop/ML/CLI/` (source for current global installation)
-- **Bundle Status**: Modified `bundle/gemini.js` deployed globally with LM Studio support
-
-The enhanced local development version with complete LM Studio integration has been installed globally and is fully functional.
-
-## 📋 Documentation Structure
-
-### Main Project Documentation
-- **`README.md`** - This file (complete project overview, architecture, and features)
-- **`LM_STUDIO_INTEGRATION_PLAN.md`** - LM Studio integration documentation
-  - ✅ Implementation completion status and technical details
-  - 🚀 Five future development phase options with timelines
-  - 📊 Success metrics, validation results, and next steps
-
-### Testing & Development Documentation
-- **`tests/README.md`** - Testing framework methodology and guidelines
-  - 🧪 Test strategy, setup requirements, and troubleshooting
-  - 🔧 Development guidelines for adding new tests
-  - 📊 Quick reference for test commands and output format
-  - ✅ Phase 4 completion status (October 1, 2025)
-- **`tests/step3/README.md`** - CLI integration debugging guide
-  - 🐛 Specific debugging procedures for authentication and bundle issues
-  - 🔍 Manual testing workflows and validation commands
-  - ⚡ Troubleshooting guide for common CLI integration problems
-- **`tests/step4/README.md`** - Tool calling investigation and CLI fix (COMPLETE)
-  - 🎯 Investigation results: Models ARE tool-aware (90-100%)
-  - 🔧 CLI fix: Telemetry timeout issue resolved
-  - 📋 Essential validation scripts and troubleshooting
-  - 💡 Key lessons learned and best practices
-- **`tests/STEP4_CLEANUP_SUMMARY.md`** - Step 4 cleanup documentation
-  - 📊 20 files deleted, 4 essential files kept
-  - 📉 README reduced by 73% (950 → 255 lines)
-  - ✨ Benefits: clarity, speed, maintainability
-
-### Package Documentation
-- **`gemini-cli-masters-core/README.md`** - Core package documentation
-- **`gemini-cli-masters/README.md`** - CLI package documentation
-
-> **Note**: Each README serves a specific purpose to avoid redundancy. The main README provides the complete overview, while specialized READMEs focus on their specific domains (testing, debugging, integration planning).

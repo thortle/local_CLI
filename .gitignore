@@ -102,3 +102,21 @@ Thumbs.db
 !gemini-cli-masters/
 !gemini-cli-masters-core/
 !gemini-cli-masters-core/dist/
+
+# Local development files (not for GitHub)
+tests/
+future_features.md
+CONTEXT_HANDOFF.md
+LM_STUDIO_INTEGRATION_PLAN.md
+quick-test.sh
+readmyself.md
+.ai_context.md
+ai_context/
+*.old.md
+*.corrupted.md
+*.backup
+*.backup-phase*
+
+# Subdirectory READMEs (conflicting install instructions)
+gemini-cli-masters/README.md
+gemini-cli-masters-core/README.md
