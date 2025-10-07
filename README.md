@@ -35,9 +35,6 @@ local_CLI/
 ```
 
 ---
-
-## AI Provider Support
-
 ### NOTE: 
 The project is far from complete. It is a personal side-project. Future updates will include stability improvements, bug fixes, agentic RAG, MCP tools, knowledge graphs and more.
 
